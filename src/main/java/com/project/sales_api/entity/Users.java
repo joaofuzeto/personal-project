@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class Users {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +34,16 @@ public class User {
         this.createdAt = LocalDateTime.now();
     }
 
-    protected User() {}
+    protected Users() {}
+
+    protected Users(Long id, String name, String email, String password, Roles role, LocalDateTime createdAt) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.createdAt = createdAt;
+    }
 
     public Long getId() {
         return id;

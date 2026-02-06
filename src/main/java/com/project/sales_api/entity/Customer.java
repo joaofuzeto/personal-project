@@ -31,6 +31,14 @@ public class Customer {
 
     protected Customer() {}
 
+    protected Customer(Long id, String name, String email, String document, LocalDateTime createdAt) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.document = document;
+        this.createdAt = createdAt;
+    }
+
     public Long getId() {
         return id;
     }

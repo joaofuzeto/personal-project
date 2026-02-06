@@ -36,6 +36,16 @@ public class Subscription {
 
     protected Subscription() {}
 
+    protected Subscription(Long id, String planName, BigDecimal price, SubscriptionStatus status, LocalDate startDate, LocalDate endDate, Customer customer) {
+        this.id = id;
+        this.planName = planName;
+        this.price = price;
+        this.status = status;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.customer = customer;
+    }
+
     public Long getId() {
         return id;
     }
