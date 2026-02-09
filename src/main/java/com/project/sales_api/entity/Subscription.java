@@ -34,9 +34,9 @@ public class Subscription {
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
-    protected Subscription() {}
+    public Subscription() {}
 
-    protected Subscription(Long id, String planName, BigDecimal price, SubscriptionStatus status, LocalDate startDate, LocalDate endDate, Customer customer) {
+    public Subscription(Long id, String planName, BigDecimal price, SubscriptionStatus status, LocalDate startDate, LocalDate endDate, Customer customer) {
         this.id = id;
         this.planName = planName;
         this.price = price;

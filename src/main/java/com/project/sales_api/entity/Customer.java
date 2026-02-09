@@ -29,9 +29,9 @@ public class Customer {
         this.createdAt = LocalDateTime.now();
     }
 
-    protected Customer() {}
+    public Customer() {}
 
-    protected Customer(Long id, String name, String email, String document, LocalDateTime createdAt) {
+    public Customer(Long id, String name, String email, String document, LocalDateTime createdAt) {
         this.id = id;
         this.name = name;
         this.email = email;

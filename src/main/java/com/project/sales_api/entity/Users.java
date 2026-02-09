@@ -34,9 +34,9 @@ public class Users {
         this.createdAt = LocalDateTime.now();
     }
 
-    protected Users() {}
+    public Users() {}
 
-    protected Users(Long id, String name, String email, String password, Roles role, LocalDateTime createdAt) {
+    public Users(Long id, String name, String email, String password, Roles role, LocalDateTime createdAt) {
         this.id = id;
         this.name = name;
         this.email = email;
