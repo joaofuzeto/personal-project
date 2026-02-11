@@ -11,7 +11,7 @@ public interface CustomerService {
 
     String createCustomer(CustomerRequestDTO dto);
     Optional<Customer> findCustomerByID(Long id);
-    List<CustomerResponseDTO> findAll();
+    List<CustomerResponseDTO> findAllCustomers();
     CustomerResponseDTO update(Long id, CustomerRequestDTO dto);
-    void delete(Long id);
+    void deleteCustomerById(Long id);
 }

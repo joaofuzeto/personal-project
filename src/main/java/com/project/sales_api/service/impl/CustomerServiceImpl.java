@@ -9,6 +9,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,8 +42,16 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<CustomerResponseDTO> findAll() {
-        return List.of();
+    public List<CustomerResponseDTO> findAllCustomers() {
+
+        return customerRepository
+                .findAll()
+                .stream()
+                .map(customer -> new CustomerResponseDTO(
+                        customer.getName(),
+                        customer.getEmail(),
+                        customer.getDocument()))
+                .toList();
     }
 
     @Override
@@ -51,7 +60,13 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void delete(Long id) {
+    public void deleteCustomerById(Long id) {
+        var customerExist = customerRepository.existsById(id);
 
+        if(customerExist){
+            customerRepository.deleteById(id);
+        } else {
+            throw new RuntimeException("Usuário não existe");
+        }
     }
 }
