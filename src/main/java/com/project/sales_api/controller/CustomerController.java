@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -30,13 +29,10 @@ public class CustomerController {
     }
 
     @GetMapping("/{customerId}")
-    public ResponseEntity<Customer> findCustomerById(@PathVariable("customerId") Long customerId){
+    public ResponseEntity<CustomerResponseDTO> findCustomerById(@PathVariable("customerId") Long customerId){
         var customer = customerServiceImpl.findCustomerByID(customerId);
-        if(customer.isPresent()){
-            return ResponseEntity.ok(customer.get());
-        } else{
-            return ResponseEntity.notFound().build();
-        }
+
+        return ResponseEntity.ok(customer);
     }
 
     @GetMapping
@@ -44,6 +40,14 @@ public class CustomerController {
         var customers = customerServiceImpl.findAllCustomers();
 
         return ResponseEntity.ok(customers);
+    }
+
+    @PutMapping("/{userId}")
+    public ResponseEntity<CustomerResponseDTO> updateUserById(@PathVariable("userId") Long id, @RequestBody CustomerRequestDTO customerRequestDTO){
+        
+        CustomerResponseDTO updatedCustomer = customerServiceImpl.updateCustomer(id, customerRequestDTO);
+
+        return ResponseEntity.ok(updatedCustomer);
     }
 
     @DeleteMapping("/{userId}")

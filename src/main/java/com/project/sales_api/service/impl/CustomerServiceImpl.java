@@ -37,8 +37,12 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Optional<Customer> findCustomerByID(Long customerId) {
-        return customerRepository.findById(customerId);
+    public CustomerResponseDTO findCustomerByID(Long customerId) {
+
+        var customerFound = customerRepository.findById(customerId)
+                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+
+        return new CustomerResponseDTO(customerFound.getName(), customerFound.getEmail(), customerFound.getDocument());
     }
 
     @Override
@@ -55,8 +59,23 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerResponseDTO update(Long id, CustomerRequestDTO dto) {
-        return null;
+    public CustomerResponseDTO updateCustomer(Long id, CustomerRequestDTO dto) {
+        var userEntity = customerRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+
+        if(dto.name() != null){
+            userEntity.setName(dto.name());
+        }
+        if(dto.email() != null){
+            userEntity.setEmail(dto.email());
+        }
+        if(dto.document() != null){
+            userEntity.setDocument(dto.document());
+        }
+        customerRepository.save(userEntity);
+
+        return new CustomerResponseDTO(userEntity.getName(), userEntity.getEmail(), userEntity.getDocument());
+
     }
 
     @Override
