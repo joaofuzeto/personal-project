@@ -3,6 +3,7 @@ package com.project.sales_api.controller;
 import com.project.sales_api.dto.CustomerRequestDTO;
 import com.project.sales_api.entity.Customer;
 import com.project.sales_api.service.impl.CustomerServiceImpl;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,10 +20,11 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<Customer> createCustomer(@RequestBody CustomerRequestDTO customerRequestDTO){
+    public ResponseEntity<String> createCustomer(@RequestBody CustomerRequestDTO customerRequestDTO){
         var customerId = customerServiceImpl.createCustomer(customerRequestDTO);
+        String message = "O cliente " + customerRequestDTO.name() + " foi criado com sucesso";
 
-        return ResponseEntity.created(URI.create("/v1/users/" + customerId.toString())).build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(message);
     }
 
     @GetMapping("/{customerId}")
@@ -34,5 +36,7 @@ public class CustomerController {
             return ResponseEntity.notFound().build();
         }
     }
+
+
 
 }
