@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -22,7 +23,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Long create(CustomerRequestDTO dto) {
+    public String createCustomer(CustomerRequestDTO dto) {
         Customer customer = new Customer();
         customer.setName(dto.name());
         customer.setEmail(dto.email());
@@ -31,15 +32,12 @@ public class CustomerServiceImpl implements CustomerService {
 
         var customerSaved = customerRepository.save(customer);
 
-        return customerSaved.getId();
+        return "O usuário " + customerSaved.getName() + " foi criado com sucesso.";
     }
 
     @Override
-    public CustomerResponseDTO findByID(Long id) {
-        Customer customer = customerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Customer not found"));
-
-        return new CustomerResponseDTO(customer.getId(), customer.getName(), customer.getEmail(), customer.getDocument());
+    public Optional<Customer> findCustomerByID(Long customerId) {
+        return customerRepository.findById(customerId);
     }
 
     @Override
