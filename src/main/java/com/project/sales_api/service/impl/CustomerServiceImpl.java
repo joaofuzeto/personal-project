@@ -9,9 +9,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -24,7 +22,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public String createCustomer(CustomerRequestDTO dto) {
+    public CustomerResponseDTO createCustomer(CustomerRequestDTO dto) {
         Customer customer = new Customer();
         customer.setName(dto.name());
         customer.setEmail(dto.email());
@@ -33,7 +31,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         var customerSaved = customerRepository.save(customer);
 
-        return "O usuário " + customerSaved.getName() + " foi criado com sucesso.";
+        return new CustomerResponseDTO(customerSaved.getName(), customerSaved.getEmail(), customerSaved.getDocument());
     }
 
     @Override
@@ -60,21 +58,21 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomerResponseDTO updateCustomer(Long id, CustomerRequestDTO dto) {
-        var userEntity = customerRepository.findById(id)
+        var customerEntity = customerRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
 
         if(dto.name() != null){
-            userEntity.setName(dto.name());
+            customerEntity.setName(dto.name());
         }
         if(dto.email() != null){
-            userEntity.setEmail(dto.email());
+            customerEntity.setEmail(dto.email());
         }
         if(dto.document() != null){
-            userEntity.setDocument(dto.document());
+            customerEntity.setDocument(dto.document());
         }
-        customerRepository.save(userEntity);
+        customerRepository.save(customerEntity);
 
-        return new CustomerResponseDTO(userEntity.getName(), userEntity.getEmail(), userEntity.getDocument());
+        return new CustomerResponseDTO(customerEntity.getName(), customerEntity.getEmail(), customerEntity.getDocument());
 
     }
 
@@ -85,7 +83,7 @@ public class CustomerServiceImpl implements CustomerService {
         if(customerExist){
             customerRepository.deleteById(id);
         } else {
-            throw new RuntimeException("Usuário não existe");
+            throw new RuntimeException("Cliente não existe");
         }
     }
 }

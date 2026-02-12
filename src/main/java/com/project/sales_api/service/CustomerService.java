@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface CustomerService {
 
-    String createCustomer(CustomerRequestDTO dto);
+    CustomerResponseDTO createCustomer(CustomerRequestDTO dto);
     CustomerResponseDTO findCustomerByID(Long id);
     List<CustomerResponseDTO> findAllCustomers();
     CustomerResponseDTO updateCustomer(Long id, CustomerRequestDTO dto);
