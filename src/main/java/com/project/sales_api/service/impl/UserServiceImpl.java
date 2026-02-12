@@ -3,6 +3,7 @@ package com.project.sales_api.service.impl;
 import com.project.sales_api.dto.UserRequestDTO;
 import com.project.sales_api.dto.UserResponseDTO;
 import com.project.sales_api.entity.Users;
+import com.project.sales_api.exception.ResourceNotFoundException;
 import com.project.sales_api.repository.UserRepository;
 import com.project.sales_api.service.UserService;
 import jakarta.transaction.Transactional;
@@ -31,34 +32,30 @@ public class UserServiceImpl implements UserService {
         user.setCreatedAt(LocalDateTime.now());
 
         var userSaved = userRepository.save(user);
-        return new UserResponseDTO(userSaved.getName(), userSaved.getEmail(),
-                userSaved.getRole());
+        return toDto(userSaved);
     }
 
     @Override
     public UserResponseDTO findUserById(Long id) {
 
         var userFound = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
 
-        return new UserResponseDTO(userFound.getName(), userFound.getEmail(), userFound.getRole());
+        return toDto(userFound);
     }
 
     @Override
     public List<UserResponseDTO> findAllUsers() {
         return userRepository.findAll()
                 .stream()
-                .map(user -> new UserResponseDTO(
-                        user.getName(),
-                        user.getEmail(),
-                        user.getRole()))
+                .map(this::toDto)
                 .toList();
     }
 
     @Override
     public UserResponseDTO updateUserById(Long id, UserRequestDTO userRequestDTO) {
         var userEntity = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuário não existe"));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
 
         if(userRequestDTO.name() != null){
             userEntity.setName(userRequestDTO.name());
@@ -75,13 +72,21 @@ public class UserServiceImpl implements UserService {
 
         userRepository.save(userEntity);
 
-        return new UserResponseDTO(userEntity.getName(), userEntity.getEmail(), userEntity.getRole());
+        return toDto(userEntity);
     }
 
     @Override
     public void deleteUserById(Long id) {
-        var userExist = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        var userExist = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
 
         userRepository.delete(userExist);
+    }
+
+    private UserResponseDTO toDto(Users u){
+        return new UserResponseDTO(
+                u.getName(),
+                u.getEmail(),
+                u.getRole()
+        );
     }
 }

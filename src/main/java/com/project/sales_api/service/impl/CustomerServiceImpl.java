@@ -3,6 +3,7 @@ package com.project.sales_api.service.impl;
 import com.project.sales_api.dto.CustomerRequestDTO;
 import com.project.sales_api.dto.CustomerResponseDTO;
 import com.project.sales_api.entity.Customer;
+import com.project.sales_api.exception.ResourceNotFoundException;
 import com.project.sales_api.repository.CustomerRepository;
 import com.project.sales_api.service.CustomerService;
 import jakarta.transaction.Transactional;
@@ -31,16 +32,16 @@ public class CustomerServiceImpl implements CustomerService {
 
         var customerSaved = customerRepository.save(customer);
 
-        return new CustomerResponseDTO(customerSaved.getName(), customerSaved.getEmail(), customerSaved.getDocument());
+        return toDto(customerSaved);
     }
 
     @Override
     public CustomerResponseDTO findCustomerByID(Long customerId) {
 
         var customerFound = customerRepository.findById(customerId)
-                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado"));
 
-        return new CustomerResponseDTO(customerFound.getName(), customerFound.getEmail(), customerFound.getDocument());
+        return toDto(customerFound);
     }
 
     @Override
@@ -49,17 +50,14 @@ public class CustomerServiceImpl implements CustomerService {
         return customerRepository
                 .findAll()
                 .stream()
-                .map(customer -> new CustomerResponseDTO(
-                        customer.getName(),
-                        customer.getEmail(),
-                        customer.getDocument()))
+                .map(this::toDto)
                 .toList();
     }
 
     @Override
     public CustomerResponseDTO updateCustomer(Long id, CustomerRequestDTO dto) {
         var customerEntity = customerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado"));
 
         if(dto.name() != null){
             customerEntity.setName(dto.name());
@@ -72,15 +70,22 @@ public class CustomerServiceImpl implements CustomerService {
         }
         customerRepository.save(customerEntity);
 
-        return new CustomerResponseDTO(customerEntity.getName(), customerEntity.getEmail(), customerEntity.getDocument());
+        return toDto(customerEntity);
 
     }
 
     @Override
     public void deleteCustomerById(Long id) {
         var customerExist = customerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado"));
 
         customerRepository.delete(customerExist);
+    }
+
+    private CustomerResponseDTO toDto(Customer c){
+        return new CustomerResponseDTO(
+                c.getName(),
+                c.getEmail(),
+                c.getDocument());
     }
 }

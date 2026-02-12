@@ -4,6 +4,7 @@ import com.project.sales_api.Enums.SubscriptionStatus;
 import com.project.sales_api.dto.SubscriptionRequestDTO;
 import com.project.sales_api.dto.SubscriptionResponseDTO;
 import com.project.sales_api.entity.Subscription;
+import com.project.sales_api.exception.ResourceNotFoundException;
 import com.project.sales_api.repository.CustomerRepository;
 import com.project.sales_api.repository.SubscriptionRepository;
 import com.project.sales_api.service.SubscriptionService;
@@ -29,7 +30,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     public SubscriptionResponseDTO createSubscription(SubscriptionRequestDTO subscriptionRequestDTO) {
 
         var customer = customerRepository.findById(subscriptionRequestDTO.customerId())
-                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado"));
 
         var subscriptionEntity = new Subscription();
         subscriptionEntity.setPlanName(subscriptionRequestDTO.planName());
@@ -41,36 +42,28 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
         subscriptionRepository.save(subscriptionEntity);
 
-        return new SubscriptionResponseDTO(
-                subscriptionEntity.getPlanName(),
-                subscriptionEntity.getPrice(),
-                subscriptionEntity.getStatus(),
-                subscriptionEntity.getCustomer().getName());
+        return toDto(subscriptionEntity);
     }
 
     @Override
     public SubscriptionResponseDTO findSubscriptionById(Long id) {
         var subscriptionFound = subscriptionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Assinatura não encontrada."));
+                .orElseThrow(() -> new ResourceNotFoundException("Assinatura não encontrada."));
 
-        return new SubscriptionResponseDTO(
-                subscriptionFound.getPlanName(),
-                subscriptionFound.getPrice(),
-                subscriptionFound.getStatus(),
-                subscriptionFound.getCustomer().getName());
+        return toDto(subscriptionFound);
     }
 
     @Override
     public List<SubscriptionResponseDTO> findAllSubscriptions() {
         return subscriptionRepository.findAll().stream().map(
-                s -> new SubscriptionResponseDTO(s.getPlanName(), s.getPrice(), s.getStatus(), s.getCustomer().getName()))
+                        this::toDto)
                 .toList();
     }
 
     @Override
     public SubscriptionResponseDTO updateSubscriptionById(Long id, SubscriptionRequestDTO subscriptionRequestDTO) {
         var subscriptionEntity = subscriptionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Assinatura não encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Assinatura não encontrada"));
 
         if(subscriptionRequestDTO.planName() != null){
             subscriptionEntity.setPlanName(subscriptionRequestDTO.planName());
@@ -81,14 +74,23 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
         subscriptionRepository.save(subscriptionEntity);
 
-        return new SubscriptionResponseDTO(subscriptionEntity.getPlanName(), subscriptionEntity.getPrice(), subscriptionEntity.getStatus(), subscriptionEntity.getCustomer().getName());
+        return toDto(subscriptionEntity);
     }
 
     @Override
     public void deleteSubscriptionById(Long id) {
         var subscriptionExist = subscriptionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Assinatura não encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Assinatura não encontrada"));
 
         subscriptionRepository.delete(subscriptionExist);
+    }
+
+    private SubscriptionResponseDTO toDto(Subscription s){
+        return new SubscriptionResponseDTO(
+                s.getId(),
+                s.getPlanName(),
+                s.getPrice(),
+                s.getStatus(),
+                s.getCustomer().getName());
     }
 }
