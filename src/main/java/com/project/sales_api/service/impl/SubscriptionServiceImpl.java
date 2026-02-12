@@ -34,7 +34,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         var subscriptionEntity = new Subscription();
         subscriptionEntity.setPlanName(subscriptionRequestDTO.planName());
         subscriptionEntity.setPrice(subscriptionRequestDTO.price());
-        subscriptionEntity.setStatus(subscriptionRequestDTO.subscriptionStatus());
+        subscriptionEntity.setStatus(SubscriptionStatus.ACTIVE);
         subscriptionEntity.setCustomer(customer);
         subscriptionEntity.setStartDate(LocalDate.now());
         subscriptionEntity.setEndDate(LocalDate.now().plusMonths(2));
@@ -78,13 +78,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         if(subscriptionRequestDTO.price() != null){
             subscriptionFound.setPrice(subscriptionRequestDTO.price());
         }
-        if(subscriptionRequestDTO.subscriptionStatus() != null){
-            if(subscriptionFound.getEndDate().isBefore(LocalDate.now())) {
-                subscriptionFound.setStatus(SubscriptionStatus.EXPIRED);
-            } else{
-                subscriptionFound.setStatus(subscriptionRequestDTO.subscriptionStatus());
-            }
-        }
+
         return new SubscriptionResponseDTO(subscriptionFound.getPlanName(), subscriptionFound.getPrice(), subscriptionFound.getStatus(), subscriptionFound.getCustomer().getName());
     }
 

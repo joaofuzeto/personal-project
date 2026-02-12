@@ -7,7 +7,6 @@ import java.math.BigDecimal;
 public record SubscriptionRequestDTO(
         String planName,
         BigDecimal price,
-        SubscriptionStatus subscriptionStatus,
         Long customerId
 ) {
 }
