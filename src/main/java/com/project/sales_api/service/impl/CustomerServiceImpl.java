@@ -78,12 +78,9 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void deleteCustomerById(Long id) {
-        var customerExist = customerRepository.existsById(id);
+        var customerExist = customerRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
 
-        if(customerExist){
-            customerRepository.deleteById(id);
-        } else {
-            throw new RuntimeException("Cliente não existe");
-        }
+        customerRepository.deleteById(id);
     }
 }

@@ -69,27 +69,26 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Override
     public SubscriptionResponseDTO updateSubscriptionById(Long id, SubscriptionRequestDTO subscriptionRequestDTO) {
-        var subscriptionFound = subscriptionRepository.findById(id)
+        var subscriptionEntity = subscriptionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Assinatura não encontrada"));
 
         if(subscriptionRequestDTO.planName() != null){
-            subscriptionFound.setPlanName(subscriptionRequestDTO.planName());
+            subscriptionEntity.setPlanName(subscriptionRequestDTO.planName());
         }
         if(subscriptionRequestDTO.price() != null){
-            subscriptionFound.setPrice(subscriptionRequestDTO.price());
+            subscriptionEntity.setPrice(subscriptionRequestDTO.price());
         }
 
-        return new SubscriptionResponseDTO(subscriptionFound.getPlanName(), subscriptionFound.getPrice(), subscriptionFound.getStatus(), subscriptionFound.getCustomer().getName());
+        subscriptionRepository.save(subscriptionEntity);
+
+        return new SubscriptionResponseDTO(subscriptionEntity.getPlanName(), subscriptionEntity.getPrice(), subscriptionEntity.getStatus(), subscriptionEntity.getCustomer().getName());
     }
 
     @Override
     public void deleteSubscriptionById(Long id) {
-        var subscriptionExist = subscriptionRepository.existsById(id);
+        var subscriptionExist = subscriptionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Assinatura não encontrada"));
 
-        if(subscriptionExist){
-            subscriptionRepository.deleteById(id);
-        } else{
-            throw new RuntimeException("Assinatura não existe");
-        }
+        subscriptionRepository.deleteById(id);
     }
 }

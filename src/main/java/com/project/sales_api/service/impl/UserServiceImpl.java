@@ -73,17 +73,15 @@ public class UserServiceImpl implements UserService {
             userEntity.setRole(userRequestDTO.role());
         }
 
+        userRepository.save(userEntity);
+
         return new UserResponseDTO(userEntity.getName(), userEntity.getEmail(), userEntity.getRole());
     }
 
     @Override
     public void deleteUserById(Long id) {
-        var userExist = userRepository.existsById(id);
+        var userExist = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
-        if(userExist){
-            userRepository.deleteById(id);
-        } else{
-            throw new RuntimeException("Usuário não existe");
-        }
+        userRepository.deleteById(id);
     }
 }
