@@ -91,6 +91,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 s.getPlanName(),
                 s.getPrice(),
                 s.getStatus(),
-                s.getCustomer().getName());
+                s.getCustomer().getName(),
+                s.getStartDate(),
+                s.getEndDate());
     }
 }
