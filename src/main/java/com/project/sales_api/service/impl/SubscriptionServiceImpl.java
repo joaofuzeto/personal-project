@@ -89,6 +89,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         var subscriptionExist = subscriptionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Assinatura não encontrada"));
 
-        subscriptionRepository.deleteById(id);
+        subscriptionRepository.delete(subscriptionExist);
     }
 }

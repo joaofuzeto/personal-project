@@ -81,6 +81,6 @@ public class CustomerServiceImpl implements CustomerService {
         var customerExist = customerRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
 
-        customerRepository.deleteById(id);
+        customerRepository.delete(customerExist);
     }
 }

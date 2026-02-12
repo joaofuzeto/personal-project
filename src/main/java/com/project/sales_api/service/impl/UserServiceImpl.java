@@ -82,6 +82,6 @@ public class UserServiceImpl implements UserService {
     public void deleteUserById(Long id) {
         var userExist = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
-        userRepository.deleteById(id);
+        userRepository.delete(userExist);
     }
 }
