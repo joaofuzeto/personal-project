@@ -3,6 +3,7 @@ package com.project.sales_api.controller;
 import com.project.sales_api.dto.SubscriptionRequestDTO;
 import com.project.sales_api.dto.SubscriptionResponseDTO;
 import com.project.sales_api.service.impl.SubscriptionServiceImpl;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ public class SubscriptionController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createSubscription(@RequestBody SubscriptionRequestDTO subscriptionRequestDTO){
+    public ResponseEntity<String> createSubscription(@Valid @RequestBody SubscriptionRequestDTO subscriptionRequestDTO){
         var subscriptionCreated = subscriptionServiceImpl.createSubscription(subscriptionRequestDTO);
         var message = "A assinatura: " + subscriptionCreated.planName()
                 + " foi criada com sucesso e está vinculada ao cliente " + subscriptionCreated.customerName() + ".";
@@ -43,7 +44,7 @@ public class SubscriptionController {
     }
 
     @PutMapping("/{subscriptionId}")
-    public ResponseEntity<SubscriptionResponseDTO> updatingSubscriptionById(@PathVariable("subscriptionId") Long id, @RequestBody SubscriptionRequestDTO subscriptionRequestDTO){
+    public ResponseEntity<SubscriptionResponseDTO> updatingSubscriptionById(@PathVariable("subscriptionId") Long id, @Valid @RequestBody SubscriptionRequestDTO subscriptionRequestDTO){
         var subscriptionUpdated = subscriptionServiceImpl.updateSubscriptionById(id, subscriptionRequestDTO);
 
         return ResponseEntity.ok(subscriptionUpdated);

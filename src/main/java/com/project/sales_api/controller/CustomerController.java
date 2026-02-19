@@ -3,6 +3,7 @@ package com.project.sales_api.controller;
 import com.project.sales_api.dto.CustomerRequestDTO;
 import com.project.sales_api.dto.CustomerResponseDTO;
 import com.project.sales_api.service.impl.CustomerServiceImpl;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createCustomer(@RequestBody CustomerRequestDTO customerRequestDTO){
+    public ResponseEntity<String> createCustomer(@Valid @RequestBody CustomerRequestDTO customerRequestDTO){
         customerServiceImpl.createCustomer(customerRequestDTO);
         String message = "O cliente " + customerRequestDTO.name() + " foi criado com sucesso";
 
@@ -42,7 +43,7 @@ public class CustomerController {
     }
 
     @PutMapping("/{customerId}")
-    public ResponseEntity<CustomerResponseDTO> updateUserById(@PathVariable("customerId") Long id, @RequestBody CustomerRequestDTO customerRequestDTO){
+    public ResponseEntity<CustomerResponseDTO> updateUserById(@PathVariable("customerId") Long id, @Valid @RequestBody CustomerRequestDTO customerRequestDTO){
         
         CustomerResponseDTO updatedCustomer = customerServiceImpl.updateCustomer(id, customerRequestDTO);
 

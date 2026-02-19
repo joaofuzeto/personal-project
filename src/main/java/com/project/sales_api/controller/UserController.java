@@ -3,6 +3,7 @@ package com.project.sales_api.controller;
 import com.project.sales_api.dto.UserRequestDTO;
 import com.project.sales_api.dto.UserResponseDTO;
 import com.project.sales_api.service.impl.UserServiceImpl;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createUser(@RequestBody UserRequestDTO userRequestDTO){
+    public ResponseEntity<String> createUser(@Valid @RequestBody UserRequestDTO userRequestDTO){
         userServiceImpl.createUser(userRequestDTO);
         String message = "O usuário " + userRequestDTO.name() + " foi criado com sucesso";
 
@@ -43,7 +44,7 @@ public class UserController {
     }
 
     @PutMapping("/{userId}")
-    public ResponseEntity<UserResponseDTO> updateUserById(@PathVariable("userId") Long id, @RequestBody UserRequestDTO userRequestDTO){
+    public ResponseEntity<UserResponseDTO> updateUserById(@PathVariable("userId") Long id, @Valid @RequestBody UserRequestDTO userRequestDTO){
         var userUpdated = userServiceImpl.updateUserById(id, userRequestDTO);
 
         return ResponseEntity.ok(userUpdated);

@@ -10,12 +10,12 @@ public record UserRequestDTO(
         String name,
 
         @Email
-        @NotBlank
+        @NotBlank(message = "usuário deve conter email válido")
         String email,
 
-        @NotBlank
+        @NotBlank(message = "usuário deve conter uma senha válida")
         String password,
 
-        @NotBlank
+        @NotBlank(message = "usuário deve ter uma função USER ou ADMIN")
         Roles role) {
 }
