@@ -13,17 +13,20 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(UserNotFoundException.class)
-    private ResponseEntity<String> UserNotFoundHandler(UserNotFoundException exception){
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
+    private ResponseEntity<RestErrorMessage> UserNotFoundHandler(UserNotFoundException exception){
+        RestErrorMessage threatResponse = new RestErrorMessage(HttpStatus.NOT_FOUND, exception.getMessage());
+        return ResponseEntity.status(threatResponse.getHttpStatus()).body(threatResponse);
     }
 
     @ExceptionHandler(CustomerNotFoundException.class)
-    private ResponseEntity<String> CustomerNotFoundHandler(CustomerNotFoundException exception){
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente não encontrado");
+    private ResponseEntity<RestErrorMessage> CustomerNotFoundHandler(CustomerNotFoundException exception){
+        RestErrorMessage threatResponse = new RestErrorMessage(HttpStatus.NOT_FOUND, exception.getMessage());
+        return ResponseEntity.status(threatResponse.getHttpStatus()).body(threatResponse);
     }
 
     @ExceptionHandler(SubscriptionNotFoundException.class)
-    private ResponseEntity<String> SubscriptionNotFoundHandler(SubscriptionNotFoundException exception){
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Assinatura não encontrada");
+    private ResponseEntity<RestErrorMessage> SubscriptionNotFoundHandler(SubscriptionNotFoundException exception){
+        RestErrorMessage threatResponse = new RestErrorMessage(HttpStatus.NOT_FOUND, exception.getMessage());
+        return ResponseEntity.status(threatResponse.getHttpStatus()).body(threatResponse);
     }
 }
