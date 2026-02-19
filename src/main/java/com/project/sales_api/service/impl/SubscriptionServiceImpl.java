@@ -4,7 +4,8 @@ import com.project.sales_api.Enums.SubscriptionStatus;
 import com.project.sales_api.dto.SubscriptionRequestDTO;
 import com.project.sales_api.dto.SubscriptionResponseDTO;
 import com.project.sales_api.entity.Subscription;
-import com.project.sales_api.exception.ResourceNotFoundException;
+import com.project.sales_api.exception.SubscriptionNotFoundException;
+import com.project.sales_api.exception.UserNotFoundException;
 import com.project.sales_api.repository.CustomerRepository;
 import com.project.sales_api.repository.SubscriptionRepository;
 import com.project.sales_api.service.SubscriptionService;
@@ -30,7 +31,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     public SubscriptionResponseDTO createSubscription(SubscriptionRequestDTO subscriptionRequestDTO) {
 
         var customer = customerRepository.findById(subscriptionRequestDTO.customerId())
-                .orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado"));
+                .orElseThrow(UserNotFoundException::new);
 
         var subscriptionEntity = new Subscription();
         subscriptionEntity.setPlanName(subscriptionRequestDTO.planName());
@@ -48,7 +49,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Override
     public SubscriptionResponseDTO findSubscriptionById(Long id) {
         var subscriptionFound = subscriptionRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Assinatura não encontrada."));
+                .orElseThrow(SubscriptionNotFoundException::new);
 
         return toDto(subscriptionFound);
     }
@@ -63,7 +64,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Override
     public SubscriptionResponseDTO updateSubscriptionById(Long id, SubscriptionRequestDTO subscriptionRequestDTO) {
         var subscriptionEntity = subscriptionRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Assinatura não encontrada"));
+                .orElseThrow(SubscriptionNotFoundException::new);
 
         if(subscriptionRequestDTO.planName() != null){
             subscriptionEntity.setPlanName(subscriptionRequestDTO.planName());
@@ -80,7 +81,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Override
     public void deleteSubscriptionById(Long id) {
         var subscriptionExist = subscriptionRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Assinatura não encontrada"));
+                .orElseThrow(SubscriptionNotFoundException::new);
 
         subscriptionRepository.delete(subscriptionExist);
     }

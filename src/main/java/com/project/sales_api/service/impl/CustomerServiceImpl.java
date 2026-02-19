@@ -3,7 +3,7 @@ package com.project.sales_api.service.impl;
 import com.project.sales_api.dto.CustomerRequestDTO;
 import com.project.sales_api.dto.CustomerResponseDTO;
 import com.project.sales_api.entity.Customer;
-import com.project.sales_api.exception.ResourceNotFoundException;
+import com.project.sales_api.exception.CustomerNotFoundException;
 import com.project.sales_api.repository.CustomerRepository;
 import com.project.sales_api.service.CustomerService;
 import jakarta.transaction.Transactional;
@@ -39,7 +39,7 @@ public class CustomerServiceImpl implements CustomerService {
     public CustomerResponseDTO findCustomerByID(Long customerId) {
 
         var customerFound = customerRepository.findById(customerId)
-                .orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado"));
+                .orElseThrow(CustomerNotFoundException::new);
 
         return toDto(customerFound);
     }
@@ -57,7 +57,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public CustomerResponseDTO updateCustomer(Long id, CustomerRequestDTO dto) {
         var customerEntity = customerRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado"));
+                .orElseThrow(CustomerNotFoundException::new);
 
         if(dto.name() != null){
             customerEntity.setName(dto.name());
@@ -77,7 +77,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void deleteCustomerById(Long id) {
         var customerExist = customerRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado"));
+                .orElseThrow(CustomerNotFoundException::new);
 
         customerRepository.delete(customerExist);
     }
