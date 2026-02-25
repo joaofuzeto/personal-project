@@ -16,7 +16,6 @@ public record SubscriptionRequestDTO(
         @DecimalMin(value = "0.00", inclusive = false,  message = "Preço deve ser maior que zero")
         BigDecimal price,
 
-        @NotNull(message = "Informe o id do Cliente associado a esse serviço")
         Long customerId
 ) {
 }

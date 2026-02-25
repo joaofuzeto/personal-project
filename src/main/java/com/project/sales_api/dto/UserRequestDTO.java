@@ -16,6 +16,5 @@ public record UserRequestDTO(
         @NotBlank(message = "usuário deve conter uma senha válida")
         String password,
 
-        @NotBlank(message = "usuário deve ter uma função USER ou ADMIN")
         Roles role) {
 }

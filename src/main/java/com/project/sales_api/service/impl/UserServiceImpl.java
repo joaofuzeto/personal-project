@@ -7,6 +7,7 @@ import com.project.sales_api.exception.UserNotFoundException;
 import com.project.sales_api.repository.UserRepository;
 import com.project.sales_api.service.UserService;
 import jakarta.transaction.Transactional;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -24,10 +25,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDTO createUser(UserRequestDTO userRequestDTO) {
+
+        String encryptedPassword = new BCryptPasswordEncoder().encode(userRequestDTO.password());
+
         var user = new Users();
         user.setName(userRequestDTO.name());
         user.setEmail(userRequestDTO.email());
-        user.setPassword(userRequestDTO.password());
+        user.setPassword(encryptedPassword);
         user.setRole(userRequestDTO.role());
         user.setCreatedAt(LocalDateTime.now());
 
