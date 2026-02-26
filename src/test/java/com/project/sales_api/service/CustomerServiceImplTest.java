@@ -57,7 +57,7 @@ public class CustomerServiceImplTest {
         Long id = 1L;
 
         Customer customer = new Customer();
-        customer.setId(1L);
+        customer.setId(id);
         customer.setName("Maria Albertina");
         customer.setEmail("maria@maria.com");
         customer.setDocument("78945612378");

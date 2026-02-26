@@ -4,6 +4,7 @@ import com.project.sales_api.Enums.SubscriptionStatus;
 import com.project.sales_api.dto.SubscriptionRequestDTO;
 import com.project.sales_api.dto.SubscriptionResponseDTO;
 import com.project.sales_api.entity.Subscription;
+import com.project.sales_api.exception.CustomerNotFoundException;
 import com.project.sales_api.exception.SubscriptionNotFoundException;
 import com.project.sales_api.exception.UserNotFoundException;
 import com.project.sales_api.repository.CustomerRepository;
@@ -31,7 +32,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     public SubscriptionResponseDTO createSubscription(SubscriptionRequestDTO subscriptionRequestDTO) {
 
         var customer = customerRepository.findById(subscriptionRequestDTO.customerId())
-                .orElseThrow(UserNotFoundException::new);
+                .orElseThrow(CustomerNotFoundException::new);
 
         var subscriptionEntity = new Subscription();
         subscriptionEntity.setPlanName(subscriptionRequestDTO.planName());
