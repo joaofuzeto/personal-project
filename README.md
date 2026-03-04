@@ -80,6 +80,7 @@ mvn test
 ### Clone the repository
 
 git clone https://github.com/joaofuzeto/personal-project
+
 cd sales-api
 
 ### Run with Docker
