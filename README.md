@@ -17,6 +17,7 @@ O projeto implementa autenticação JWT, arquitetura em camadas, testes unitári
 - Docker & Docker Compose
 - JUnit 5
 - Mockito
+- Railway
 
 ---
 
@@ -54,7 +55,7 @@ Essa estrutura facilita manutenção, testes e escalabilidade.
 
 A API utiliza autenticação baseada em JWT.
 
-Após realizar login (http://localhost:8080/auth/login), o token deve ser enviado no header:
+Após realizar login ("/auth/login"), o token deve ser enviado no header:
 
 Authorization: Bearer <token>
 
@@ -105,9 +106,9 @@ A configuração é feita via variáveis de ambiente:
 
 ---
 
-## 🌍 Public Deployment
+## 🌍 Public Deployment on Railway
 
-(Em breve)
+https://personal-project-production-748e.up.railway.app
 
 ---
 
