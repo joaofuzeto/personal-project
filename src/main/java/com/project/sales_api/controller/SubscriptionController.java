@@ -3,6 +3,7 @@ package com.project.sales_api.controller;
 import com.project.sales_api.dto.SubscriptionRequestDTO;
 import com.project.sales_api.dto.SubscriptionResponseDTO;
 import com.project.sales_api.service.impl.SubscriptionServiceImpl;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@SecurityRequirement(name = "bearerAuth")
 @RestController
 @RequestMapping("/v1/subscriptions")
 public class SubscriptionController {
