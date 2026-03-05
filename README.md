@@ -1,12 +1,34 @@
 # Sales API
 
-REST API desenvolvida com Java 17 e Spring Boot para gerenciamento de usuários, clientes e assinaturas.
+REST API desenvolvida com **Java 17 + Spring Boot** para gerenciamento de usuários, clientes e assinaturas.
 
-O projeto implementa autenticação JWT, arquitetura em camadas, testes unitários com Mockito e containerização com Docker.
+O projeto implementa **autenticação JWT**, **arquitetura em camadas**, **testes unitários com Mockito** e **containerização com Docker**, além de **deploy em cloud utilizando Railway**.
 
 ---
 
-## 🚀 Technologies
+# 🌍 Live API
+
+API disponível publicamente:
+
+https://personal-project-production-748e.up.railway.app
+
+---
+
+# 📚 API Documentation (Swagger)
+
+A documentação interativa da API pode ser acessada em:
+
+https://personal-project-production-748e.up.railway.app/swagger-ui/index.html
+
+Através do Swagger é possível:
+
+- visualizar todos os endpoints
+- testar requisições
+- autenticar utilizando JWT
+
+---
+
+# 🚀 Technologies
 
 - Java 17
 - Spring Boot
@@ -17,58 +39,103 @@ O projeto implementa autenticação JWT, arquitetura em camadas, testes unitári
 - Docker & Docker Compose
 - JUnit 5
 - Mockito
-- Railway
+- Railway (Cloud Deployment)
 
 ---
 
-## 🏗 Architecture
+# 🏗 Architecture
 
-O projeto segue arquitetura em camadas, separando responsabilidades de forma clara:
+O projeto segue **arquitetura em camadas**, separando responsabilidades:
 
-- Entity → Camada representativa da entidade do Database
-- Controller → Camada de entrada (HTTP)
-- Service → Regras de negócio
-- Repository → Persistência com JPA
-- DTOs → Comunicação entre camadas
-- Global Exception Handler → Tratamento centralizado de erros
-- Infra → Responsável pela configuração Spring Security
+Controller → Camada de entrada HTTP
+Service → Regras de negócio
+Repository → Persistência com JPA
+Entity → Representação das tabelas do banco
+DTO → Transferência de dados entre camadas
+Security → Autenticação e autorização JWT
+GlobalExceptionHandler → Tratamento centralizado de erros
 
-Essa estrutura facilita manutenção, testes e escalabilidade.
+
+Essa estrutura melhora:
+
+- manutenção
+- testabilidade
+- escalabilidade
 
 ---
 
-## 📌 Features
+# 📌 Features
 
-- CRUD completo de Customers
-- CRUD completo de Subscriptions
-- Relacionamento entre Customer e Subscription
-- Autenticação e autorização com JWT
-- Validação de dados com Bean Validation
+- CRUD completo de **Customers**
+- CRUD completo de **Subscriptions**
+- Relacionamento entre **Customer e Subscription**
+- Autenticação segura com **JWT**
+- **Role-based authorization** (ADMIN / USER)
+- Validação de dados com **Bean Validation**
 - Tratamento global de exceções
-- Persistência com MySQL
-- Containerização da aplicação
+- Persistência com **MySQL**
+- Containerização com **Docker** e **Docker Compose**
+- Deploy em **cloud (Railway)**
 - Testes unitários na camada de serviço
 
 ---
 
-## 🔐 Authentication
+# 🔐 Authentication
 
-A API utiliza autenticação baseada em JWT.
+A API utiliza autenticação baseada em **JWT**.
 
-Após realizar login ("/auth/login"), o token deve ser enviado no header:
+### Login
+
+POST /auth/login
+
+
+Após autenticação, a API retorna um **token JWT**.
+
+Esse token deve ser enviado no header das requisições protegidas:
 
 Authorization: Bearer <token>
 
+O Swagger permite autenticação através do botão **Authorize**.
+
+Endpoints que não necessitam de autenticação e não exigem autorização:
+
+POST /auth/login
+POST /v1/users
+
+Certifique-se de definir o campo `"role" : "ADMIN"` na criação de um usuário para acesso total aos endpoints.
 ---
 
-## 🧪 Tests
+# 📡 Main Endpoints
 
-O projeto possui testes unitários utilizando:
+
+POST /auth/login
+
+GET /v1/users
+GET /v1/users/{id}
+POST /v1/users
+PUT /v1/users/{id}
+DELETE /v1/users/{id}
+
+GET /v1/customers
+GET /v1/customers/{id}
+POST /v1/customers
+PUT /v1/customers/{id}
+DELETE /v1/customers/{id}
+
+GET /v1/subscriptions
+GET /v1/subscriptions/{id}
+POST /v1/subscriptions
+PUT /v1/subscriptions/{id}
+DELETE /v1/subscriptions/{id}
+
+---
+
+# 🧪 Tests
+
+O projeto possui **testes unitários na camada de serviço** utilizando:
 
 - JUnit 5
 - Mockito
-
-Os testes cobrem a camada de serviço, garantindo regras de negócio e comportamento esperado.
 
 Para rodar os testes:
 
@@ -76,52 +143,54 @@ mvn test
 
 ---
 
-## 💻 Running Locally
+# 💻 Running Locally
 
-### Clone the repository
+Clone o repositório:
 
 git clone https://github.com/joaofuzeto/personal-project
 
 cd sales-api
 
-### Run with Docker
+
+Rodar com Docker:
 
 docker compose up --build
 
+
 A aplicação estará disponível em:
+
 http://localhost:8080
 
 ---
 
-## 🗄 Database
+# 🗄 Database
 
-O projeto utiliza MySQL como banco de dados.
+O projeto utiliza **MySQL** como banco de dados.
 
-A configuração é feita via variáveis de ambiente:
+A configuração é feita através de variáveis de ambiente:
 
-- SPRING_DATASOURCE_URL
-- SPRING_DATASOURCE_USERNAME
-- SPRING_DATASOURCE_PASSWORD
-- JWT_SECRET
-
----
-
-## 🌍 Public Deployment on Railway
-
-https://personal-project-production-748e.up.railway.app
+SPRING_DATASOURCE_URL
+SPRING_DATASOURCE_USERNAME
+SPRING_DATASOURCE_PASSWORD
+JWT_SECRET
 
 ---
 
-## 📈 Future Improvements
+# 📈 Future Improvements
 
 - Paginação com Pageable
 - Testcontainers para testes de integração
 - Logging estruturado
-- CI/CD pipeline
-- Deploy em ambiente cloud
+- CI/CD pipeline com GitHub Actions
+- Monitoramento da aplicação
 
 ---
 
-## 👨‍💻 Author
+# 👨‍💻 Author
 
-João Victor Fuzeto Nascibem
+**João Victor Fuzeto Nascibem**
+
+Backend Developer | Java | Spring Boot
+
+
+
