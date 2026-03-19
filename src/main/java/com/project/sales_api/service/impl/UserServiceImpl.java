@@ -88,6 +88,7 @@ public class UserServiceImpl implements UserService {
 
     private UserResponseDTO toDto(Users u){
         return new UserResponseDTO(
+                u.getId(),
                 u.getName(),
                 u.getEmail(),
                 u.getRole()

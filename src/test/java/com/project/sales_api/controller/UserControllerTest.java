@@ -38,7 +38,7 @@ public class UserControllerTest {
     @Test
     void shouldCreateUser() throws Exception{
         UserRequestDTO requestDTO = new UserRequestDTO("João", "joao@joao.com", "joao123", Roles.ADMIN);
-        UserResponseDTO responseDTO = new UserResponseDTO("João", "joao@joao.com", Roles.ADMIN);
+        UserResponseDTO responseDTO = new UserResponseDTO(1L,"João", "joao@joao.com", Roles.ADMIN);
 
         when(userService.createUser(requestDTO)).thenReturn(responseDTO);
 
@@ -46,7 +46,7 @@ public class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(requestDTO)))
                 .andExpect(status().isCreated())
-                .andExpect(content().string(containsString("O usuário " + responseDTO.name() + " foi criado com sucesso")));
+                .andExpect(jsonPath("$.name", is(responseDTO.name())));
 
         verify(userService).createUser(requestDTO);
     }
@@ -54,7 +54,7 @@ public class UserControllerTest {
     @Test
     void shoulFindUserById() throws Exception{
         long userId = 1L;
-        UserResponseDTO responseDTO = new UserResponseDTO("João", "joao@joao.com", Roles.ADMIN);
+        UserResponseDTO responseDTO = new UserResponseDTO(userId,"João", "joao@joao.com", Roles.ADMIN);
 
         when(userService.findUserById(userId)).thenReturn(responseDTO);
 
@@ -69,8 +69,8 @@ public class UserControllerTest {
     @Test
     void shouldFindAllUsers() throws Exception{
         List<UserResponseDTO> dtoResponseList = List.of(
-                new UserResponseDTO("João", "joao@joao.com", Roles.ADMIN),
-                new UserResponseDTO("Cleiton", "cleiton@cleiton.com", Roles.ADMIN)
+                new UserResponseDTO(1L,"João", "joao@joao.com", Roles.ADMIN),
+                new UserResponseDTO(2L,"Cleiton", "cleiton@cleiton.com", Roles.ADMIN)
         );
 
         when(userService.findAllUsers()).thenReturn(dtoResponseList);
@@ -86,7 +86,7 @@ public class UserControllerTest {
     void shouldUpdateUserById() throws Exception{
         long userId = 1L;
         UserRequestDTO dtoResquest = new UserRequestDTO("João Atualizado", "emailnovo@emailnovo.com", "senhanova", Roles.ADMIN);
-        UserResponseDTO dtoResponse = new UserResponseDTO("João Atualizado", "emailnovo@emailnovo.com", Roles.ADMIN);
+        UserResponseDTO dtoResponse = new UserResponseDTO(userId, "João Atualizado", "emailnovo@emailnovo.com", Roles.ADMIN);
 
         when(userService.findUserById(userId)).thenReturn(dtoResponse);
         when(userService.updateUserById(userId, dtoResquest)).thenReturn(dtoResponse);
@@ -103,7 +103,7 @@ public class UserControllerTest {
     @Test
     void shouldDeleteUserById() throws Exception{
         long userId = 1L;
-        UserResponseDTO responseDTO = new UserResponseDTO("Cleiton", "cleiton@cleiton.com", Roles.ADMIN);
+        UserResponseDTO responseDTO = new UserResponseDTO(userId, "Cleiton", "cleiton@cleiton.com", Roles.ADMIN);
 
         when(userService.findUserById(userId)).thenReturn(responseDTO);
         doNothing().when(userService).deleteUserById(userId);

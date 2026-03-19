@@ -52,8 +52,7 @@ public class SubscriptionControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(requestDTO)))
                 .andExpect(status().isCreated())
-                .andExpect(content().string(containsString("A assinatura: " + responseDTO.planName()
-                        + " foi criada com sucesso e está vinculada ao cliente " + responseDTO.customerName() + ".")));
+                .andExpect(jsonPath("$.planName", is(responseDTO.planName())));
 
         verify(subscriptionService).createSubscription(requestDTO);
     }

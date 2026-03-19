@@ -23,11 +23,10 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createUser(@Valid @RequestBody UserRequestDTO userRequestDTO){
-        userServiceImpl.createUser(userRequestDTO);
-        String message = "O usuário " + userRequestDTO.name() + " foi criado com sucesso";
+    public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserRequestDTO userRequestDTO){
+        UserResponseDTO userSaved = userServiceImpl.createUser(userRequestDTO);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(message);
+        return ResponseEntity.status(HttpStatus.CREATED).body(userSaved);
     }
 
     @SecurityRequirement(name = "bearerAuth")

@@ -84,6 +84,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     private CustomerResponseDTO toDto(Customer c){
         return new CustomerResponseDTO(
+                c.getId(),
                 c.getName(),
                 c.getEmail(),
                 c.getDocument());

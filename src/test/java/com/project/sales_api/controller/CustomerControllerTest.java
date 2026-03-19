@@ -40,20 +40,23 @@ public class CustomerControllerTest {
     void shouldCreateCustomer() throws Exception{
 
         CustomerRequestDTO requestDTO = new CustomerRequestDTO("João", "joao@joao.com", "12345678910");
+        CustomerResponseDTO responseDTO = new CustomerResponseDTO(1L, "João", "joao@joao.com", "12345678910");
+
+        when(customerService.createCustomer(requestDTO)).thenReturn(responseDTO);
 
         mockMvc.perform(post("/v1/customers")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(requestDTO)))
                 .andExpect(status().isCreated())
-                .andExpect(content().string(containsString("O cliente " + requestDTO.name() + " foi criado com sucesso")));
+                .andExpect(jsonPath("$.name").value("João"));
 
         verify(customerService).createCustomer(requestDTO);
     }
 
     @Test
     void shouldFindCustomerById() throws Exception{
-        CustomerResponseDTO responseDTO = new CustomerResponseDTO("João", "joao@joao.com", "12345678910");
         long customerId = 1L;
+        CustomerResponseDTO responseDTO = new CustomerResponseDTO(customerId, "João", "joao@joao.com", "12345678910");
 
         when(customerService.findCustomerByID(customerId)).thenReturn(responseDTO);
 
@@ -68,8 +71,8 @@ public class CustomerControllerTest {
     void shouldReturnAllCustomers() throws Exception{
 
         List<CustomerResponseDTO> listOfResponseDtos = List.of(
-                new CustomerResponseDTO("João", "joao@joao.com", "12345678910"),
-                new CustomerResponseDTO("Monique", "monique@monique.com", "12345678911")
+                new CustomerResponseDTO(1L,"João", "joao@joao.com", "12345678910"),
+                new CustomerResponseDTO(2L, "Monique", "monique@monique.com", "12345678911")
         );
 
         when(customerService.findAllCustomers()).thenReturn(listOfResponseDtos);
@@ -83,7 +86,7 @@ public class CustomerControllerTest {
     void shouldUpdateCustomerById() throws Exception{
         long customerId = 1L;
         CustomerRequestDTO requestDTO = new CustomerRequestDTO("João Atualizado", "joaonovo@joaonovo.com", "12345678910");
-        CustomerResponseDTO responseDTO = new CustomerResponseDTO("João Atualizado", "joaonovo@joaonovo.com", "12345678910");
+        CustomerResponseDTO responseDTO = new CustomerResponseDTO(customerId,"João Atualizado", "joaonovo@joaonovo.com", "12345678910");
 
         when(customerService.findCustomerByID(customerId)).thenReturn(responseDTO);
         when(customerService.updateCustomer(customerId, requestDTO)).thenReturn(responseDTO);
@@ -101,7 +104,7 @@ public class CustomerControllerTest {
     void shouldDeleteCustomerById() throws Exception{
         long customerId = 1L;
 
-        CustomerResponseDTO responseDTO = new CustomerResponseDTO("João", "joao@joao.com", "12345678910");
+        CustomerResponseDTO responseDTO = new CustomerResponseDTO(customerId,"João", "joao@joao.com", "12345678910");
 
         when(customerService.findCustomerByID(customerId)).thenReturn(responseDTO);
         doNothing().when(customerService).deleteCustomerById(customerId);

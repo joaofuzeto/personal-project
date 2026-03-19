@@ -23,11 +23,10 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createCustomer(@Valid @RequestBody CustomerRequestDTO customerRequestDTO){
-        customerServiceImpl.createCustomer(customerRequestDTO);
-        String message = "O cliente " + customerRequestDTO.name() + " foi criado com sucesso";
+    public ResponseEntity<CustomerResponseDTO> createCustomer(@Valid @RequestBody CustomerRequestDTO customerRequestDTO){
+        var customer = customerServiceImpl.createCustomer(customerRequestDTO);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(message);
+        return ResponseEntity.status(HttpStatus.CREATED).body(customer);
     }
 
     @GetMapping("/{customerId}")

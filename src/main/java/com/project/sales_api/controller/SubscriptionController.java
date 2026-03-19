@@ -23,12 +23,10 @@ public class SubscriptionController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createSubscription(@Valid @RequestBody SubscriptionRequestDTO subscriptionRequestDTO){
+    public ResponseEntity<SubscriptionResponseDTO> createSubscription(@Valid @RequestBody SubscriptionRequestDTO subscriptionRequestDTO){
         var subscriptionCreated = subscriptionServiceImpl.createSubscription(subscriptionRequestDTO);
-        var message = "A assinatura: " + subscriptionCreated.planName()
-                + " foi criada com sucesso e está vinculada ao cliente " + subscriptionCreated.customerName() + ".";
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(message);
+        return ResponseEntity.status(HttpStatus.CREATED).body(subscriptionCreated);
     }
 
     @GetMapping("/{subscriptionId}")
