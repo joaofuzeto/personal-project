@@ -2,7 +2,7 @@
 
 REST API desenvolvida com **Java 17 + Spring Boot** para gerenciamento de usuários, clientes e assinaturas.
 
-O projeto implementa **autenticação JWT**, **arquitetura em camadas**, **testes unitários com Mockito** e **containerização com Docker**, além de **deploy em cloud utilizando Railway**.
+O projeto implementa **autenticação JWT**, **arquitetura em camadas**, **testes unitários com Mockito** e **containerização com Docker**, além de **deploy em cloud**.
 
 ---
 
@@ -10,7 +10,8 @@ O projeto implementa **autenticação JWT**, **arquitetura em camadas**, **teste
 
 API disponível publicamente:
 
-https://personal-project-production-748e.up.railway.app
+🌍 **Live API:** [Clique aqui](https://personal-project-production-748e.up.railway.app)  
+📚 **Swagger Docs:** [Clique aqui](https://personal-project-production-748e.up.railway.app/swagger-ui/index.html)
 
 ---
 
@@ -30,16 +31,13 @@ Através do Swagger é possível:
 
 # 🚀 Technologies
 
-- Java 17
-- Spring Boot
-- Spring Security
-- JWT Authentication
-- Spring Data JPA
-- MySQL
-- Docker & Docker Compose
-- JUnit 5
-- Mockito
-- Railway (Cloud Deployment)
+**Tech Stack:**
+- Java 17 & Spring Boot → API REST com arquitetura limpa
+- Spring Security + JWT → Autenticação e autorização seguras
+- Spring Data JPA + MySQL → Persistência robusta
+- Docker & Docker Compose → Containerização e facilidade de deploy
+- JUnit 5 & Mockito → Testes unitários da camada de serviço
+- Railway → Deploy em cloud gratuito e rápido
 
 ---
 
@@ -64,19 +62,13 @@ Essa estrutura melhora:
 
 ---
 
-# 📌 Features
+# 📌 Principais Features
 
-- CRUD completo de **Customers**
-- CRUD completo de **Subscriptions**
-- Relacionamento entre **Customer e Subscription**
-- Autenticação segura com **JWT**
-- **Role-based authorization** (ADMIN / USER)
-- Validação de dados com **Bean Validation**
-- Tratamento global de exceções
-- Persistência com **MySQL**
-- Containerização com **Docker** e **Docker Compose**
-- Deploy em **cloud (Railway)**
-- Testes unitários na camada de serviço
+- CRUD completo de Customers e Subscriptions com relacionamento
+- Autenticação segura com JWT e roles (ADMIN / USER)
+- Validação e tratamento global de erros
+- Containerização com Docker & Docker Compose
+- Testes unitários com Mockito
 
 ---
 
@@ -169,19 +161,18 @@ O projeto utiliza **MySQL** como banco de dados.
 
 A configuração é feita através de variáveis de ambiente:
 
-SPRING_DATASOURCE_URL
-SPRING_DATASOURCE_USERNAME
-SPRING_DATASOURCE_PASSWORD
-JWT_SECRET
+SPRING_DATASOURCE_URL=jdbc:mysql://localhost:3306/sales_db
+SPRING_DATASOURCE_USERNAME=root
+SPRING_DATASOURCE_PASSWORD=senha
+JWT_SECRET=supersecretkey
 
 ---
 
 # 📈 Future Improvements
 
-- Paginação com Pageable
-- Testcontainers para testes de integração
 - Logging estruturado
 - CI/CD pipeline com GitHub Actions
+- Deploy em ambiente AWS
 - Monitoramento da aplicação
 
 ---
@@ -192,5 +183,7 @@ JWT_SECRET
 
 Backend Developer | Java | Spring Boot
 
-
+<div>
+  <a href= "https://www.linkedin.com/in/joao-fuzeto" target= "_blank"> <img src= "https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white"></a>
+</div>
 
