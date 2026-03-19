@@ -14,66 +14,78 @@ import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
-import static io.restassured.RestAssured.get;
+import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
+
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.*;
 
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @Import(TestSecurityConfig.class)
 public class CustomerControllerIntegrationTest extends AbstractIntegrationTest {
 
-        private static RequestSpecification specification;
-        private static ObjectMapper objectMapper;
-        private static CustomerRequestDTO customerRequest;
-        private static CustomerResponseDTO customerResponse;
+        private RequestSpecification specification;
+        private ObjectMapper objectMapper;
 
-        @BeforeAll
-        public static void setup(){
+        @LocalServerPort
+        private int port;
+
+        @BeforeEach
+        public void setup(){
             specification = new RequestSpecBuilder()
                     .setBasePath("/v1/customers")
-                    .setPort(TestConfigs.SERVER_PORT)
+                    .setPort(port)
                         .addFilter(new RequestLoggingFilter(LogDetail.ALL))
                         .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
                     .build();
 
             objectMapper = new ObjectMapper();
             objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-
-            customerRequest = new CustomerRequestDTO(
-                    "João", "joao@joao.com", "12345678910"
-            );
         }
 
-        @Test
-        @Order(1)
-        void testCreateCustomer() throws Exception{
-            customerResponse = given()
+        private String generateCpf(){
+            long min = 10000000000L;
+            long max = 99999999999L;
+
+            return String.valueOf(ThreadLocalRandom.current().nextLong(min, max));
+        }
+
+        private CustomerResponseDTO createCustomer() throws Exception{
+            CustomerRequestDTO request = new CustomerRequestDTO("João", "joao" + UUID.randomUUID() + "@joao.com", generateCpf());
+
+            return given()
                         .spec(specification)
                         .contentType(TestConfigs.CONTENT_TYPE_JSON)
-                        .body(objectMapper.writeValueAsString(customerRequest))
+                        .body(objectMapper.writeValueAsString(request))
                     .when()
                         .post()
                     .then()
                         .statusCode(201)
                         .extract()
                         .as(CustomerResponseDTO.class);
-
-            assertNotNull(customerResponse);
-            assertNotNull(customerResponse.id());
-            assertEquals("João", customerResponse.name());
         }
 
         @Test
-        @Order(2)
-        void testFindCustomerById(){
+        void testCreateCustomer() throws Exception{
+            var response = createCustomer();
+
+            assertNotNull(response);
+            assertNotNull(response.id());
+            assertEquals("João", response.name());
+        }
+
+        @Test
+        void testFindCustomerById() throws Exception {
+            var created = createCustomer();
+
             var response = given()
                         .spec(specification)
-                        .pathParam("customerId", customerResponse.id())
+                        .pathParam("customerId", created.id())
                     .when()
                         .get("/{customerId}")
                     .then()
@@ -81,14 +93,16 @@ public class CustomerControllerIntegrationTest extends AbstractIntegrationTest {
                         .extract()
                         .as(CustomerResponseDTO.class);
 
-            assertNotNull(customerResponse);
-            assertEquals(customerResponse.id(), response.id());
+
+            assertNotNull(response);
+            assertEquals(created.id(), response.id());
             assertEquals("João", response.name());
         }
 
         @Test
-        @Order(3)
-        void testFindAllCustomer(){
+        void testFindAllCustomer() throws Exception{
+            createCustomer();
+
             var response = given()
                         .spec(specification)
                     .when()
@@ -103,14 +117,15 @@ public class CustomerControllerIntegrationTest extends AbstractIntegrationTest {
         }
 
         @Test
-        @Order(4)
         void testUpdatingCustomerById() throws Exception{
+
+            var created = createCustomer();
 
             CustomerRequestDTO requestUpdating = new CustomerRequestDTO("João Novo", "updated@email.com", "12345678911");
 
             var response = given()
                         .spec(specification)
-                        .pathParam("customerId", customerResponse.id())
+                        .pathParam("customerId", created.id())
                         .contentType(TestConfigs.CONTENT_TYPE_JSON)
                         .body(objectMapper.writeValueAsString(requestUpdating))
                     .when()
@@ -126,11 +141,11 @@ public class CustomerControllerIntegrationTest extends AbstractIntegrationTest {
         }
 
         @Test
-        @Order(5)
-        void testDeletingCustomerById() {
+        void testDeletingCustomerById() throws Exception {
+            var created = createCustomer();
             given()
                     .spec(specification)
-                    .pathParam("customerId", customerResponse.id())
+                    .pathParam("customerId", created.id())
                     .when()
                     .delete("/{customerId}")
                     .then()

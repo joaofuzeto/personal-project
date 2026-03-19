@@ -16,6 +16,7 @@ import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -25,20 +26,23 @@ import java.util.UUID;
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @Import(TestSecurityConfig.class)
 public class SubscriptionControllerIntegrationTest extends AbstractIntegrationTest {
 
-    private static RequestSpecification specification;
-    private static ObjectMapper objectMapper;
-    private static Long customerId;
+    private RequestSpecification specification;
+    private ObjectMapper objectMapper;
+    private Long customerId;
 
-    @BeforeAll
-    public static void setup(){
+    @LocalServerPort
+    private int port;
+
+    @BeforeEach
+    public void setup(){
         specification = new RequestSpecBuilder()
                 .setBasePath("/v1/subscriptions")
-                .setPort(TestConfigs.SERVER_PORT)
+                .setPort(port)
                 .addFilter(new RequestLoggingFilter(LogDetail.ALL))
                 .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
                 .build();
@@ -59,7 +63,7 @@ public class SubscriptionControllerIntegrationTest extends AbstractIntegrationTe
         CustomerResponseDTO response = given()
                     .spec(new RequestSpecBuilder()
                             .setBasePath("/v1/customers")
-                            .setPort(TestConfigs.SERVER_PORT)
+                            .setPort(port)
                             .build())
                     .contentType(TestConfigs.CONTENT_TYPE_JSON)
                     .body(objectMapper.writeValueAsString(request))
@@ -94,7 +98,6 @@ public class SubscriptionControllerIntegrationTest extends AbstractIntegrationTe
     @Test
     void testCreateSubscription() throws Exception{
         customerId = createCustomer();
-        System.out.println("Customer id: " + customerId);
         SubscriptionResponseDTO response = createSubscription(customerId);
 
         assertNotNull(response);

@@ -7,14 +7,18 @@ import com.project.sales_api.config.TestConfigs;
 import com.project.sales_api.integrationtests.testcontainers.AbstractIntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class SwaggerIntegrationTest extends AbstractIntegrationTest {
+
+    @LocalServerPort
+    private int port;
 
     @Test
     void shouldDisplaySwaggerUiPage(){
         var content = given().basePath("/swagger-ui/index.html")
-                .port(TestConfigs.SERVER_PORT)
+                .port(port)
                 .when()
                     .get()
                 .then()
