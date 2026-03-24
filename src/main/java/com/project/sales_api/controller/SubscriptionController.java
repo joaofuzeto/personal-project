@@ -44,7 +44,7 @@ public class SubscriptionController {
     }
 
     @PutMapping("/{subscriptionId}")
-    public ResponseEntity<SubscriptionResponseDTO> updatingSubscriptionById(@PathVariable("subscriptionId") Long id, @Valid @RequestBody SubscriptionRequestDTO subscriptionRequestDTO){
+    public ResponseEntity<SubscriptionResponseDTO> updatingSubscriptionById(@PathVariable("subscriptionId") Long id, @RequestBody SubscriptionRequestDTO subscriptionRequestDTO){
         var subscriptionUpdated = subscriptionServiceImpl.updateSubscriptionById(id, subscriptionRequestDTO);
 
         return ResponseEntity.ok(subscriptionUpdated);

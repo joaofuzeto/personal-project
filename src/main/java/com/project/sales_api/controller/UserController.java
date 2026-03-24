@@ -47,7 +47,7 @@ public class UserController {
 
     @SecurityRequirement(name = "bearerAuth")
     @PutMapping("/{userId}")
-    public ResponseEntity<UserResponseDTO> updateUserById(@PathVariable("userId") Long id, @Valid @RequestBody UserRequestDTO userRequestDTO){
+    public ResponseEntity<UserResponseDTO> updateUserById(@PathVariable("userId") Long id, @RequestBody UserRequestDTO userRequestDTO){
         var userUpdated = userServiceImpl.updateUserById(id, userRequestDTO);
 
         return ResponseEntity.ok(userUpdated);
