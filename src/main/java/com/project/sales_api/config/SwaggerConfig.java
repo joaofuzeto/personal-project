@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.management.openmbean.OpenMBeanAttributeInfo;
+import java.util.List;
 
 @Configuration
 public class SwaggerConfig {
@@ -21,6 +22,7 @@ public class SwaggerConfig {
                 .info(new Info()
                         .title("Sales API")
                         .version("1.0"))
+                .servers(List.of(new Server().url("/")))
 
                 .components(new Components()
                         .addSecuritySchemes(securitySchemeName,
@@ -30,7 +32,6 @@ public class SwaggerConfig {
                                         .scheme("bearer")
                                         .bearerFormat("JWT")
                         )
-                )
-                .addServersItem(new Server().url("https://personal-project-production-748e.up.railway.app"));
+                );
     }
 }
