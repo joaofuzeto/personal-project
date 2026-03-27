@@ -1,8 +1,8 @@
 # Sales API
 
-REST API desenvolvida com **Java 17 + Spring Boot** para gerenciamento de usuários, clientes e assinaturas.
+REST API em produção para gerenciamento de usuários, clientes e assinaturas, desenvolvida com **Java 17 + Spring Boot** e deployada na AWS utilizando **ECS (Fargate), RDS, Application Load Balancer** e pipeline completo de **CI/CD com GitHub Actions**.
 
-O projeto implementa **autenticação JWT**, **arquitetura em camadas**, **testes unitários com Mockito** e **containerização com Docker**, além de **deploy em cloud**.
+O projeto implementa **autenticação JWT**, **arquitetura em camadas**, **testes unitários com Mockito e JUnit** e **testes de integração com Testcontainers**.
 
 ---
 
@@ -10,16 +10,12 @@ O projeto implementa **autenticação JWT**, **arquitetura em camadas**, **teste
 
 API disponível publicamente:
 
-🌍 **Live API:** [Clique aqui](https://personal-project-production-748e.up.railway.app)  
-📚 **Swagger Docs:** [Clique aqui](https://personal-project-production-748e.up.railway.app/swagger-ui/index.html)
+🌍 **API Base URL:**
+http://sales-api-alb-518657079.us-east-2.elb.amazonaws.com
 
----
+📚 **Swagger UI:**
+http://sales-api-alb-518657079.us-east-2.elb.amazonaws.com/swagger-ui/index.html
 
-# 📚 API Documentation (Swagger)
-
-A documentação interativa da API pode ser acessada em:
-
-https://personal-project-production-748e.up.railway.app/swagger-ui/index.html
 
 Através do Swagger é possível:
 
@@ -37,7 +33,11 @@ Através do Swagger é possível:
 - Spring Data JPA + MySQL → Persistência robusta
 - Docker & Docker Compose → Containerização e facilidade de deploy
 - JUnit 5 & Mockito → Testes unitários da camada de serviço
-- Railway → Deploy em cloud gratuito e rápido
+- AWS ECS (Fargate) → cluster gerenciado pela Amazon
+- AWS RDS → Persistência em banco gerenciado pela Amazon
+- Docker Hub e AWS ECR → O primeiro para backup de imagem Docker e o segundo para comunicação interna AWS e deploy
+- AWS Application Load Balancer → para controle de tráfego e direcionamento para a task ECS
+- GitHub Actions (CI/CD) -> script para automação do processo de integração e deploy
 
 ---
 
@@ -53,12 +53,38 @@ DTO → Transferência de dados entre camadas
 Security → Autenticação e autorização JWT
 GlobalExceptionHandler → Tratamento centralizado de erros
 
+---
 
 Essa estrutura melhora:
 
 - manutenção
 - testabilidade
 - escalabilidade
+
+---
+
+## 🏗️ Arquitetura da Aplicação à nível CI/CD
+
+Aplicação containerizada seguindo arquitetura em camadas, executando em ambiente distribuído na AWS através do ECS (Fargate) e exposta via Application Load Balancer.
+
+![Arquitetura CI/CD](docs/architecture.png)
+
+---
+
+# ⚙️ CI/CD Pipeline
+
+O projeto possui pipeline automatizado com GitHub Actions:
+
+- Build e testes com Maven
+- Build de imagem Docker
+- Push para AWS ECR
+- Push para Docker Hub como backup
+- Versionamento de imagens com SHA do commit
+- Atualização automática da Task Definition
+- Deploy automatizado no ECS com atualização da Task Definition
+- Integração com Application Load Balancer
+
+Cada push na branch `main` dispara automaticamente o processo de deploy.
 
 ---
 
@@ -69,6 +95,7 @@ Essa estrutura melhora:
 - Validação e tratamento global de erros
 - Containerização com Docker & Docker Compose
 - Testes unitários com Mockito
+- Testes de integração com Testcontainers
 
 ---
 
@@ -78,21 +105,30 @@ A API utiliza autenticação baseada em **JWT**.
 
 ### Login
 
-POST /auth/login
+`POST /auth/login`
+
+Exemplo de requisição:
+
+```json
+{
+  "email": "admin@email.com",
+  "password": "123456"
+}
+```
 
 
 Após autenticação, a API retorna um **token JWT**.
 
 Esse token deve ser enviado no header das requisições protegidas:
 
-Authorization: Bearer <token>
+Authorization: Bearer <JWT_TOKEN>
 
 O Swagger permite autenticação através do botão **Authorize**.
 
 Endpoints que não necessitam de autenticação e não exigem autorização:
 
-POST /auth/login
-POST /v1/users
+`POST /auth/login`
+`POST /v1/users`
 
 Certifique-se de definir o campo `"role" : "ADMIN"` na criação de um usuário para acesso total aos endpoints.
 ---
@@ -100,25 +136,25 @@ Certifique-se de definir o campo `"role" : "ADMIN"` na criação de um usuário 
 # 📡 Main Endpoints
 
 
-POST /auth/login
+`POST /auth/login`
 
-GET /v1/users
-GET /v1/users/{id}
-POST /v1/users
-PUT /v1/users/{id}
-DELETE /v1/users/{id}
+`GET /v1/users`
+`GET /v1/users/{id}`
+`POST /v1/users`
+`PUT /v1/users/{id}`
+`DELETE /v1/users/{id}`
 
-GET /v1/customers
-GET /v1/customers/{id}
-POST /v1/customers
-PUT /v1/customers/{id}
-DELETE /v1/customers/{id}
+`GET /v1/customers`
+`GET /v1/customers/{id}`
+`POST /v1/customers`
+`PUT /v1/customers/{id}`
+`DELETE /v1/customers/{id}`
 
-GET /v1/subscriptions
-GET /v1/subscriptions/{id}
-POST /v1/subscriptions
-PUT /v1/subscriptions/{id}
-DELETE /v1/subscriptions/{id}
+`GET /v1/subscriptions`
+`GET /v1/subscriptions/{id}`
+`POST /v1/subscriptions`
+`PUT /v1/subscriptions/{id}`
+`DELETE /v1/subscriptions/{id}`
 
 ---
 
@@ -128,6 +164,7 @@ O projeto possui **testes unitários na camada de serviço** utilizando:
 
 - JUnit 5
 - Mockito
+- Testcontainers
 
 Para rodar os testes:
 
@@ -139,15 +176,15 @@ mvn test
 
 Clone o repositório:
 
+```bash
 git clone https://github.com/joaofuzeto/personal-project
-
 cd sales-api
-
+```
 
 Rodar com Docker:
-
+```bash
 docker compose up --build
-
+```
 
 A aplicação estará disponível em:
 
@@ -161,18 +198,18 @@ O projeto utiliza **MySQL** como banco de dados.
 
 A configuração é feita através de variáveis de ambiente:
 
+```env
 SPRING_DATASOURCE_URL=jdbc:mysql://localhost:3306/sales_db
 SPRING_DATASOURCE_USERNAME=root
 SPRING_DATASOURCE_PASSWORD=senha
 JWT_SECRET=supersecretkey
+```
 
 ---
 
 # 📈 Future Improvements
 
 - Logging estruturado
-- CI/CD pipeline com GitHub Actions
-- Deploy em ambiente AWS
 - Monitoramento da aplicação
 
 ---
